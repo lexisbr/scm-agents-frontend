@@ -1,0 +1,55 @@
+.dashboard-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.kpi-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.chart-card {
+  padding: 1.5rem;
+  border-radius: 20px;
+  border: 1px solid #e5efe5;
+  box-shadow: 0 15px 25px rgba(10, 35, 11, 0.08);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h3 {
+    margin: 0;
+  }
+
+  p {
+    margin: 0;
+    color: #5d5d5d;
+  }
+}
+
+.chart-wrapper {
+  height: 320px;
+}
+
+.agents-grid {
+  background: #fff;
+  border-radius: 18px;
+  padding: 1.25rem;
+  border: 1px solid #e5efe5;
+
+  h3 {
+    margin-top: 0;
+  }
+}
+
+.agent-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}

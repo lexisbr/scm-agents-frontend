@@ -1,0 +1,24 @@
+<mat-sidenav-container class="app-shell">
+  <mat-sidenav
+    class="sidebar-container"
+    [mode]="isHandset() ? 'over' : 'side'"
+    [opened]="sidebarOpened()"
+    (backdropClick)="closeOnMobile()"
+  >
+    <app-sidebar [compact]="isHandset()" (navigate)="closeOnMobile()"></app-sidebar>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <app-navbar
+      (toggleSidebar)="toggleSidebar()"
+      (toggleTheme)="toggleTheme()"
+      [isDarkTheme]="isDarkTheme()"
+    ></app-navbar>
+
+    <section class="content seat-scrollbar">
+      <div [@routeAnimations]="getOutletState(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </section>
+  </mat-sidenav-content>
+</mat-sidenav-container>

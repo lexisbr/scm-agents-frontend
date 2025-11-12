@@ -1,0 +1,229 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.sidebar {
+  width: clamp(240px, 24vw, 280px);
+  background: radial-gradient(circle at 20% 20%, #4cb35c, #1f4d28 90%);
+  color: #ecffef;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1.25rem;
+  gap: 1.25rem;
+  transition: width 200ms ease;
+  border-radius: 0 28px 28px 0;
+  box-shadow: 10px 0 25px rgba(7, 29, 8, 0.35);
+
+  &.compact {
+    width: 76px;
+    padding-inline: 0.65rem;
+
+    .brand .meta {
+      display: none;
+    }
+
+    mat-icon {
+      margin-right: 0;
+    }
+
+    .summary,
+    .footnote {
+      display: none;
+    }
+
+    .menu a {
+      justify-content: center;
+      padding: 0.5rem;
+    }
+
+    .text-group {
+      display: none;
+    }
+
+    .icon-wrap {
+      margin-right: 0;
+    }
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+
+  .logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(13, 50, 20, 0.3);
+    display: grid;
+    place-items: center;
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+  }
+
+  .title {
+    font-weight: 600;
+    margin: 0;
+  }
+
+  small {
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(12, 41, 18, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+
+  .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+    margin: 0;
+  }
+
+  .value {
+    margin: 0.1rem 0 0;
+    font-weight: 600;
+  }
+
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    border-radius: 999px;
+    padding: 0.2rem 0.8rem;
+    background: rgba(255, 255, 255, 0.18);
+    font-size: 0.8rem;
+    mat-icon {
+      font-size: 16px;
+      height: 16px;
+      width: 16px;
+    }
+  }
+}
+
+.menu {
+  flex: 1;
+  overflow: auto;
+  border-radius: 16px;
+  background: rgba(9, 32, 15, 0.35);
+  padding: 0.4rem 0.3rem;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: #f9fffa;
+    border-radius: 14px;
+    margin: 0.2rem 0.45rem;
+    padding: 0.4rem 0.6rem;
+    position: relative;
+    min-height: 56px;
+    transition: transform 120ms ease, background 120ms ease;
+    border: 1px solid transparent;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateX(2px);
+    }
+
+    &.active {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.35);
+      box-shadow: 0 10px 20px rgba(12, 38, 16, 0.45);
+    }
+    color: #f7fff4;
+  }
+
+  mat-icon {
+    color: inherit;
+  }
+}
+
+.icon-wrap {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.15);
+  display: grid;
+  place-items: center;
+  margin-right: 0.5rem;
+}
+
+.text-group {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+
+  .title {
+    font-weight: 500;
+    color: #fdfefc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.footnote {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.85rem;
+
+  .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.65;
+  }
+
+  strong {
+    display: block;
+    margin-top: 0.1rem;
+  }
+}
+
+@media (max-width: 1400px) {
+  .sidebar {
+    width: clamp(220px, 22vw, 260px);
+  }
+
+  .brand .logo {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-height: 740px) {
+  .sidebar {
+    padding: 1rem;
+  }
+
+  .summary,
+  .footnote {
+    font-size: 0.75rem;
+    padding: 0.6rem;
+  }
+
+  .menu a {
+    min-height: 48px;
+  }
+}

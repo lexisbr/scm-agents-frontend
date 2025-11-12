@@ -1,0 +1,111 @@
+<section class="transport-grid">
+  <mat-card class="form-card">
+    <h2>Agente de Transporte</h2>
+    <p>Simula la logística entre centros agrícolas y destinos principales.</p>
+
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Producto</mat-label>
+        <mat-select formControlName="producto">
+          <mat-option *ngFor="let producto of productos" [value]="producto">{{ producto }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cantidad (lb)</mat-label>
+        <input matInput type="number" formControlName="cantidad_lb" min="1">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Origen</mat-label>
+        <mat-select formControlName="origen">
+          <mat-option *ngFor="let item of origenes" [value]="item">{{ item }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Destino</mat-label>
+        <mat-select formControlName="destino">
+          <mat-option *ngFor="let item of destinos" [value]="item">{{ item }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+
+    <button mat-flat-button color="primary" (click)="planificar()" [disabled]="cargando()">
+      {{ cargando() ? 'Calculando plan...' : 'Planificar transporte' }}
+    </button>
+
+    <mat-progress-bar *ngIf="cargando()" mode="indeterminate"></mat-progress-bar>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+  </mat-card>
+
+  <mat-card class="result-card" *ngIf="planResult() as plan">
+    <h3>Plan recomendado</h3>
+    <div class="result-grid">
+      <div>
+        <p class="label">Producto / carga</p>
+        <p class="value sm">{{ plan.producto }} · {{ plan.cantidad_kg | number }} kg</p>
+      </div>
+      <div>
+        <p class="label">Vehículo recomendado</p>
+        <p class="value sm">{{ plan.vehiculo_recomendado }}</p>
+      </div>
+      <div>
+        <p class="label">Distancia</p>
+        <p class="value">{{ plan.ruta.distancia_km | number: '1.0-1' }} km</p>
+      </div>
+      <div>
+        <p class="label">Tiempo estimado</p>
+        <p class="value">{{ plan.ruta.tiempo_estimado_horas | number: '1.0-1' }} h</p>
+      </div>
+      <div>
+        <p class="label">Costo transporte</p>
+        <p class="value sm">Q {{ plan.costos_estimados.costo_transporte_q | number: '1.2-2' }}</p>
+      </div>
+      <div>
+        <p class="label">Combustible estimado</p>
+        <p class="value sm">{{ plan.costos_estimados.combustible_estimado_litros | number: '1.1-1' }} L</p>
+      </div>
+      <div>
+        <p class="label">Costo combustible</p>
+        <p class="value sm">Q {{ plan.costos_estimados.costo_combustible_q | number: '1.2-2' }}</p>
+      </div>
+      <div>
+        <p class="label">Condición de ruta</p>
+        <span class="chip" [ngClass]="plan.ruta.condicion">{{ plan.ruta.condicion | titlecase }}</span>
+      </div>
+    </div>
+
+    <div class="route-table">
+      <table>
+        <tr>
+          <th>Origen</th>
+          <th>Destino</th>
+          <th>Distancia</th>
+          <th>Tiempo</th>
+        </tr>
+        <tr>
+          <td>{{ plan.ruta.origen }}</td>
+          <td>{{ plan.ruta.destino }}</td>
+          <td>{{ plan.ruta.distancia_km | number: '1.0-1' }} km</td>
+          <td>{{ plan.ruta.tiempo_estimado_horas | number: '1.0-1' }} h</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="gauge">
+      <p>Proporción de distancia frente a meta logística</p>
+      <div class="bar">
+        <div class="fill" [style.width.%]="gaugeValue"></div>
+      </div>
+      <small>{{ gaugeValue }} % de 600 km máximos planificados</small>
+    </div>
+
+    <div class="alerts" *ngIf="plan.alertas?.length">
+      <p>Alertas de ruta</p>
+      <ul>
+        <li *ngFor="let alerta of plan.alertas">{{ alerta }}</li>
+      </ul>
+    </div>
+  </mat-card>
+</section>

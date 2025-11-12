@@ -1,0 +1,43 @@
+<section class="dashboard-grid">
+  <div class="kpi-grid" *ngIf="indicators$ | async as indicators">
+    <app-kpi-card
+      *ngFor="let kpi of indicators"
+      [title]="kpi.label"
+      [value]="kpi.value"
+      [unit]="kpi.unit"
+      [trend]="kpi.trend"
+      [description]="kpi.description"
+    ></app-kpi-card>
+  </div>
+
+  <mat-card class="chart-card" *ngIf="chartData$ | async as chart">
+    <div class="card-header">
+      <div>
+        <h3>Tendencias de desempeño</h3>
+        <p>KPIs alineados con eficiencia operativa y sostenibilidad.</p>
+      </div>
+      <button mat-stroked-button color="primary">
+        <mat-icon>download</mat-icon>
+        Reporte
+      </button>
+    </div>
+    <div class="chart-wrapper">
+      <canvas
+        baseChart
+        [data]="chart"
+        [options]="chartOptions"
+        chartType="line"
+      ></canvas>
+    </div>
+  </mat-card>
+
+  <div class="agents-grid">
+    <h3>Estado de agentes</h3>
+    <div class="agent-list">
+      <app-agent-card
+        *ngFor="let agente of agentes()"
+        [agente]="agente"
+      ></app-agent-card>
+    </div>
+  </div>
+</section>

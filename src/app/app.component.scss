@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.app-shell {
+  height: 100vh;
+  background: #f5f7f4;
+}
+
+.sidebar-container {
+  border-right: none;
+}
+
+mat-sidenav-content {
+  min-height: 100vh;
+  background: #f5f7f4;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 1.5rem;
+  flex: 1;
+  background: #f5f7f4;
+}

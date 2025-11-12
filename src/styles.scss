@@ -1,0 +1,80 @@
+@use '@angular/material' as mat;
+
+$seat-theme: mat.define-theme((
+  color: (
+    primary: mat.$green-palette,
+    tertiary: mat.$spring-green-palette,
+  ),
+));
+
+:root {
+  @include mat.all-component-themes($seat-theme);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: 'Roboto', 'Inter', sans-serif;
+  background-color: #f5f7f4;
+  color: #1b1b1b;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: #f5f7f4;
+}
+
+body {
+  min-height: 100%;
+}
+
+.dark-theme {
+  background-color: #111a12;
+  color: #f3fff3;
+}
+
+body.dark-theme mat-card {
+  background: #1a231a;
+  color: #f3fff3;
+}
+
+.seat-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #3b873e #edf2ee;
+}
+
+.seat-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.seat-scrollbar::-webkit-scrollbar-track {
+  background: #edf2ee;
+}
+
+.seat-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3b873e;
+  border-radius: 8px;
+}
+
+.fc {
+  font-family: inherit;
+}
+
+.fc .fc-toolbar-title {
+  font-weight: 600;
+}
+
+.fc .fc-button {
+  border-radius: 999px;
+  background: #3b873e;
+  border: none;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border-color: #e0e8e0;
+}

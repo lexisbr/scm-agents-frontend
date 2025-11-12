@@ -1,0 +1,14 @@
+<section class="kpi-card">
+  <div class="header">
+    <p>{{ title }}</p>
+    <span class="badge">SEAT</span>
+  </div>
+  <div class="value">
+    {{ value | number: '1.1-1' }} <small>{{ unit }}</small>
+  </div>
+  <div class="trend" [class.negative]="trend < 0">
+    <span>{{ trend > 0 ? '+' : '' }}{{ trend | number: '1.1-1' }} pts</span>
+    <small>último mes</small>
+  </div>
+  <p class="description">{{ description }}</p>
+</section>

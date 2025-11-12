@@ -1,0 +1,48 @@
+<aside class="sidebar" [class.compact]="compact">
+  <header class="brand">
+    <div class="logo">SEAT</div>
+    <div class="meta">
+      <p class="title">Sistema de Agentes</p>
+      <small>Cadena agrícola de Quetzaltenango</small>
+    </div>
+  </header>
+
+  <section class="summary" *ngIf="!compact">
+    <div>
+      <p class="label">Operación actual</p>
+      <p class="value">Campaña 2025 · QTZ</p>
+    </div>
+    <span class="status-chip">
+      <mat-icon>track_changes</mat-icon>
+      Sincronizado
+    </span>
+  </section>
+
+  <mat-nav-list class="menu seat-scrollbar">
+    <a
+      mat-list-item
+      *ngFor="let link of links"
+      [routerLink]="link.route"
+      routerLinkActive="active"
+      (click)="handleClick()"
+    >
+      <span class="icon-wrap">
+        <mat-icon>{{ link.icon }}</mat-icon>
+      </span>
+      <div class="text-group">
+        <span class="title">{{ link.label }}</span>
+      </div>
+    </a>
+  </mat-nav-list>
+
+  <footer class="footnote" *ngIf="!compact">
+    <div>
+      <span class="label">Humedad promedio</span>
+      <strong>68%</strong>
+    </div>
+    <div>
+      <span class="label">Lotes monitoreados</span>
+      <strong>24</strong>
+    </div>
+  </footer>
+</aside>

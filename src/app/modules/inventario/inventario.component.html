@@ -1,0 +1,86 @@
+<section class="inventory-grid">
+  <mat-card class="form-card">
+    <h2>Agente de Inventario y Acopio</h2>
+    <p>Evalúa la disponibilidad combinada entre inventario actual, cosecha y demanda.</p>
+
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Producto</mat-label>
+        <mat-select formControlName="producto">
+          <mat-option *ngFor="let producto of productos" [value]="producto">{{ producto }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Inventario actual (lb)</mat-label>
+        <input matInput type="number" formControlName="inventario_lb" min="1">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cosecha esperada (lb)</mat-label>
+        <input matInput type="number" formControlName="cosecha_lb" min="0">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Demanda predicha (lb)</mat-label>
+        <input matInput type="number" formControlName="demanda_lb" min="0">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Horizonte (días)</mat-label>
+        <input matInput type="number" formControlName="horizonte_dias" min="1">
+      </mat-form-field>
+    </form>
+
+    <button mat-flat-button color="primary" (click)="evaluar()" [disabled]="cargando()">
+      {{ cargando() ? 'Evaluando...' : 'Evaluar inventario' }}
+    </button>
+
+    <mat-progress-bar *ngIf="cargando()" mode="indeterminate"></mat-progress-bar>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+  </mat-card>
+
+  <mat-card class="result-card" *ngIf="resultado() as res">
+    <h3>Resultado</h3>
+    <div class="result-grid">
+      <div>
+        <p class="label">Inventario total disponible</p>
+        <p class="value">{{ res.inventario_total_disponible_kg | number }} kg</p>
+      </div>
+      <div>
+        <p class="label">Superávit / déficit</p>
+        <p class="value" [class.negative]="res.superavit_deficit_kg < 0">
+          {{ res.superavit_deficit_kg | number }} kg
+        </p>
+      </div>
+      <div>
+        <p class="label">Estado</p>
+        <span class="chip" [ngClass]="res.estado">{{ res.estado | titlecase }}</span>
+      </div>
+      <div>
+        <p class="label">Stock de seguridad</p>
+        <p class="value sm">{{ res.stock_seguridad_kg | number }} kg</p>
+      </div>
+      <div>
+        <p class="label">Días cubiertos</p>
+        <p class="value sm">{{ res.indicadores.dias_cubiertos | number: '1.0-0' }} días</p>
+      </div>
+      <div>
+        <p class="label">Demanda diaria</p>
+        <p class="value sm">{{ res.indicadores.demanda_promedio_diaria_kg | number: '1.0-0' }} kg</p>
+      </div>
+    </div>
+
+    <div class="gauge">
+      <p>Nivel de cobertura vs demanda</p>
+      <div class="bar">
+        <div class="fill" [style.width.%]="gaugeValue"></div>
+      </div>
+      <small>{{ gaugeValue }} % respecto a la demanda total</small>
+    </div>
+
+    <div class="summary">
+      <p>{{ res.recomendacion }}</p>
+    </div>
+  </mat-card>
+</section>

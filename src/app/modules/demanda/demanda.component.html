@@ -1,0 +1,84 @@
+<section class="demanda-grid">
+  <mat-card class="form-card">
+    <header>
+      <div>
+        <h2>Agente de Predicción de Demanda</h2>
+        <p>Ingresa los parámetros para consultar el MVP.</p>
+      </div>
+    </header>
+
+    <form [formGroup]="predictionForm">
+      <mat-form-field appearance="fill">
+        <mat-label>Producto</mat-label>
+        <mat-select formControlName="producto" [disabled]="productosLoading()">
+          <mat-option *ngFor="let item of productos" [value]="item">{{ item | titlecase }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Año</mat-label>
+        <input matInput type="number" formControlName="anio" min="2020">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Mes</mat-label>
+        <mat-select formControlName="mes">
+          <mat-option *ngFor="let mes of meses" [value]="mes">{{ mes }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Precio promedio (Q/libra)</mat-label>
+        <input matInput type="number" formControlName="precio_promedio_lb" step="0.01">
+      </mat-form-field>
+    </form>
+
+    <div class="form-actions">
+      <button mat-flat-button color="primary" (click)="predecir()" [disabled]="cargando()">
+        {{ cargando() ? 'Consultando...' : 'Predecir demanda' }}
+      </button>
+    </div>
+
+    <mat-progress-bar *ngIf="cargando()" mode="indeterminate"></mat-progress-bar>
+    <p class="error" *ngIf="productosError()">{{ productosError() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+  </mat-card>
+
+  <mat-card class="result-card" *ngIf="resultado() as res">
+    <h3>Resultado</h3>
+    <div class="result-grid">
+      <div>
+        <p class="label">Demanda predicha</p>
+        <p class="value">{{ res.demanda_predicha_kg | number }} kg</p>
+      </div>
+      <div>
+        <p class="label">Categoría</p>
+        <p class="value sm">{{ res.categoria | titlecase }}</p>
+      </div>
+      <div>
+        <p class="label">Alerta</p>
+        <span class="chip" [ngClass]="res.alerta">{{ res.alerta | titlecase }}</span>
+      </div>
+      <div>
+        <p class="label">Producto</p>
+        <p class="value sm">{{ res.producto }}</p>
+      </div>
+      <div>
+        <p class="label">Precio usado</p>
+        <p class="value sm">Q {{ res.precio_promedio_kg | number: '1.2-2' }}</p>
+      </div>
+      <div>
+        <p class="label">Periodo consultado</p>
+        <p class="value sm">{{ res.anio }} / {{ res.mes }}</p>
+      </div>
+    </div>
+
+    <div class="gauge">
+      <p>Nivel estimado</p>
+      <div class="bar">
+        <div class="fill" [style.width.%]="gaugeValue"></div>
+      </div>
+      <small>{{ gaugeValue }} % de la capacidad objetivo</small>
+    </div>
+  </mat-card>
+</section>

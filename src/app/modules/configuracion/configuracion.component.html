@@ -1,0 +1,55 @@
+<section class="config-grid">
+  <mat-card>
+    <h2>Parámetros del sistema</h2>
+    <form [formGroup]="configuracionForm">
+      <mat-form-field appearance="outline">
+        <mat-label>API base URL</mat-label>
+        <input matInput formControlName="apiBaseUrl" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Idioma</mat-label>
+        <mat-select formControlName="idioma">
+          <mat-option value="es">Español</mat-option>
+          <mat-option value="en">Inglés</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Tema</mat-label>
+        <mat-select formControlName="tema">
+          <mat-option value="light">Claro</mat-option>
+          <mat-option value="dark">Oscuro</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+    <button mat-flat-button color="primary" (click)="guardarPreferencias()">
+      Guardar
+    </button>
+  </mat-card>
+
+  <mat-card>
+    <h2>Activación de agentes</h2>
+    <form [formGroup]="agentesForm">
+      <mat-slide-toggle formControlName="demanda">Demanda</mat-slide-toggle>
+      <mat-slide-toggle formControlName="cosecha">Cosecha</mat-slide-toggle>
+      <mat-slide-toggle formControlName="inventario">Inventario</mat-slide-toggle>
+      <mat-slide-toggle formControlName="transporte">Transporte</mat-slide-toggle>
+    </form>
+    <button mat-stroked-button color="primary" (click)="guardarAgentes()">Actualizar</button>
+  </mat-card>
+
+  <mat-card class="usuarios-card">
+    <h2>Usuarios simulados</h2>
+    <mat-list>
+      <mat-list-item *ngFor="let usuario of usuarios">
+        <mat-icon matListItemIcon>person</mat-icon>
+        <div matListItemTitle>{{ usuario.nombre }}</div>
+        <div matListItemLine>{{ usuario.rol }}</div>
+        <button mat-icon-button matListItemMeta>
+          <mat-icon>more_vert</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
+</section>

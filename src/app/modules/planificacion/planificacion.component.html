@@ -1,0 +1,88 @@
+<section class="harvest-grid">
+  <mat-card class="form-card">
+    <header>
+      <div>
+        <h2>Agente de Cosechas</h2>
+        <p>Consulta rápida del MVP de cosecha proyectada por producto.</p>
+      </div>
+    </header>
+
+    <form [formGroup]="form">
+      <mat-form-field appearance="fill">
+        <mat-label>Producto</mat-label>
+        <mat-select formControlName="producto">
+          <mat-option *ngFor="let item of productos" [value]="item">{{ item }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Año</mat-label>
+        <input matInput type="number" formControlName="anio">
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Mes</mat-label>
+        <mat-select formControlName="mes">
+          <mat-option *ngFor="let mes of meses" [value]="mes">{{ mes }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Área cultivada (ha)</mat-label>
+        <input matInput type="number" formControlName="area_ha" min="0.1" step="0.1">
+      </mat-form-field>
+    </form>
+
+    <div class="actions">
+      <button mat-flat-button color="primary" (click)="predecir()" [disabled]="cargando()">
+        {{ cargando() ? 'Calculando...' : 'Predecir cosecha' }}
+      </button>
+    </div>
+
+    <mat-progress-bar *ngIf="cargando()" mode="indeterminate"></mat-progress-bar>
+    <p class="error" *ngIf="productosError()">{{ productosError() }}</p>
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+  </mat-card>
+
+  <mat-card class="result-card" *ngIf="resultado() as res">
+    <h3>Resultado del MVP</h3>
+    <div class="result-grid">
+      <div>
+        <p class="label">Rendimiento estimado (kg/ha)</p>
+        <p class="value">{{ res.rendimiento_estimado_kg_ha | number }}</p>
+      </div>
+      <div>
+        <p class="label">Cosecha total estimada (kg)</p>
+        <p class="value">{{ res.cosecha_estimada_kg | number }}</p>
+      </div>
+      <div>
+        <p class="label">Área consultada</p>
+        <p class="value sm">{{ res.area_ha }} ha · {{ res.producto }}</p>
+      </div>
+      <div>
+        <p class="label">Temperatura del mes</p>
+        <p class="value sm">{{ res.condiciones.temperatura_mes_c | number: '1.0-1' }} °C</p>
+      </div>
+      <div>
+        <p class="label">Temperatura anual</p>
+        <p class="value sm">{{ res.condiciones.temperatura_anual_c | number: '1.0-1' }} °C</p>
+      </div>
+      <div>
+        <p class="label">Variación de temperatura</p>
+        <p class="value sm">{{ res.condiciones.variacion_temp | number: '1.0-1' }} °C</p>
+      </div>
+      <div>
+        <p class="label">Condición climática</p>
+        <span class="chip" [ngClass]="res.condiciones.clima">{{ res.condiciones.clima | titlecase }}</span>
+      </div>
+    </div>
+
+    <div class="gauge">
+      <p>Nivel de rendimiento</p>
+      <div class="bar">
+        <div class="fill" [style.width.%]="gaugeValue"></div>
+      </div>
+      <small>{{ gaugeValue }} % respecto al objetivo</small>
+    </div>
+  </mat-card>
+</section>

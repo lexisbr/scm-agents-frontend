@@ -1,0 +1,13 @@
+<article class="agent-card" [class.ready]="agente.estado === 'ready'" [class.warning]="agente.estado === 'warning'">
+  <header>
+    <mat-icon>{{ icon }}</mat-icon>
+    <div>
+      <p class="title">{{ agente.nombre }}</p>
+      <small>{{ agente.descripcion }}</small>
+    </div>
+  </header>
+  <footer>
+    <span class="status">{{ agente.estado | uppercase }}</span>
+    <small>Actualizado {{ agente.ultimaActualizacion | date: 'shortTime' }}</small>
+  </footer>
+</article>

@@ -1,0 +1,24 @@
+<mat-toolbar color="primary" class="navbar">
+  <button mat-icon-button (click)="toggleSidebar.emit()" class="menu-button">
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div class="title">
+    <span class="primary">Sistema de Agentes Autónomos</span>
+    <small>Optimización predictiva agrícola · Quetzaltenango</small>
+  </div>
+
+  <div class="agents">
+    <div class="agent-chip"
+         *ngFor="let agente of agentes()"
+         [class.ready]="agente.estado === 'ready'"
+         [class.warning]="agente.estado === 'warning'"
+         [class.offline]="agente.estado === 'offline'">
+      <mat-icon>
+        {{ agente.estado === 'ready' ? 'check_circle' : agente.estado === 'warning' ? 'sync_problem' : 'error' }}
+      </mat-icon>
+      <span>{{ agente.nombre }}</span>
+    </div>
+  </div>
+
+</mat-toolbar>
