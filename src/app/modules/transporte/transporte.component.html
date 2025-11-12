@@ -6,8 +6,8 @@
     <form [formGroup]="form">
       <mat-form-field appearance="fill">
         <mat-label>Producto</mat-label>
-        <mat-select formControlName="producto">
-          <mat-option *ngFor="let producto of productos" [value]="producto">{{ producto }}</mat-option>
+        <mat-select formControlName="producto" [disabled]="productosLoading()">
+          <mat-option *ngFor="let producto of productos" [value]="producto">{{ producto | titlecase }}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -36,6 +36,7 @@
     </button>
 
     <mat-progress-bar *ngIf="cargando()" mode="indeterminate"></mat-progress-bar>
+    <p class="error" *ngIf="productosError()">{{ productosError() }}</p>
     <p class="error" *ngIf="error()">{{ error() }}</p>
   </mat-card>
 

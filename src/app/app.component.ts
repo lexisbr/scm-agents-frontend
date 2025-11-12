@@ -19,7 +19,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import { forkJoin, of, timer } from 'rxjs';
+import { forkJoin, of, timer, Observable } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { NavbarComponent } from './layout/navbar/navbar.component';
@@ -108,27 +108,34 @@ export class AppComponent {
       .pipe(
         switchMap(() =>
           forkJoin({
-            orchestrator: this.wrapHealth('orchestrator'),
-            inventory: this.wrapHealth('inventory'),
-            route: this.wrapHealth('route'),
+            prediction: this.wrapHealth$(
+              this.agentsService.getPredictionMvpHealth()
+            ),
+            harvest: this.wrapHealth$(
+              this.agentsService.getHarvestMvpHealth()
+            ),
+            transport: this.wrapHealth$(
+              this.agentsService.getTransportPlanHealth()
+            ),
+            inventory: this.wrapHealth$(
+              this.agentsService.getInventoryCheckHealth()
+            ),
           })
         ),
         takeUntilDestroyed()
       )
-      .subscribe(({ orchestrator, inventory, route }) => {
+      .subscribe(({ prediction, harvest, transport, inventory }) => {
         this.agentStore.bulkUpdate({
-          prediccion: this.mapStatus(orchestrator.status),
-          cosecha: 'ready',
+          prediccion: this.mapStatus(prediction.status),
+          cosecha: this.mapStatus(harvest.status),
+          transporte: this.mapStatus(transport.status),
           inventario: this.mapStatus(inventory.status),
-          transporte: this.mapStatus(route.status),
         });
       });
   }
 
-  private wrapHealth(agent: 'orchestrator' | 'inventory' | 'route') {
-    return this.agentsService
-      .getHealth(agent)
-      .pipe(catchError(() => of({ status: 'offline' })));
+  private wrapHealth$(source: Observable<{ status: string }>) {
+    return source.pipe(catchError(() => of({ status: 'offline' })));
   }
 
   private mapStatus(status?: string): EstadoAgente {

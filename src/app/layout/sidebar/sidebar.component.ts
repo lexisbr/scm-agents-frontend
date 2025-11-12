@@ -25,12 +25,10 @@ export class SidebarComponent {
   @Output() navigate = new EventEmitter<void>();
 
   readonly links: SidebarLink[] = [
-    { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { label: 'Demanda', icon: 'show_chart', route: '/demanda', hint: 'Predicción y dataset MAGA' },
     { label: 'Planificación', icon: 'calendar_today', route: '/planificacion' },
     { label: 'Transporte', icon: 'local_shipping', route: '/transporte' },
     { label: 'Inventario', icon: 'inventory_2', route: '/inventario' },
-    { label: 'Configuración', icon: 'settings', route: '/configuracion' },
   ];
 
   handleClick(): void {

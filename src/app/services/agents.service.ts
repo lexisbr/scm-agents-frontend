@@ -62,4 +62,28 @@ export class AgentsService {
       `${this.baseUrl()}/agents/harvest-mvp/products`
     );
   }
+
+  getPredictionMvpHealth(): Observable<{ status: string }> {
+    return this.http.get<{ status: string }>(
+      `${this.baseUrl()}/agents/prediction/health`
+    );
+  }
+
+  getHarvestMvpHealth(): Observable<{ status: string }> {
+    return this.http.get<{ status: string }>(
+      `${this.baseUrl()}/agents/harvest-mvp/health`
+    );
+  }
+
+  getTransportPlanHealth(): Observable<{ status: string }> {
+    return this.http.get<{ status: string }>(
+      `${this.baseUrl()}/transport-plan-mvp/health`
+    );
+  }
+
+  getInventoryCheckHealth(): Observable<{ status: string }> {
+    return this.http.get<{ status: string }>(
+      `${this.baseUrl()}/inventory-check-mvp/health`
+    );
+  }
 }

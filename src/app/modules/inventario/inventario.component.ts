@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { InventoryAgentService } from '../../services/inventory-agent.service';
+import { AgentsService } from '../../services/agents.service';
+import { ProductoCatalogoItem } from '../../interfaces/producto.interface';
 import {
   InventoryRequest,
   InventoryResponse,
@@ -33,11 +35,14 @@ import {
 export class InventarioComponent {
   private readonly fb = inject(FormBuilder);
   private readonly inventoryService = inject(InventoryAgentService);
+  private readonly agentsService = inject(AgentsService);
 
-  readonly productos = ['Tomate', 'Papa', 'Zanahoria', 'Cebolla', 'Brócoli'];
+  readonly productosCatalogo = signal<ProductoCatalogoItem[]>([]);
+  readonly productosLoading = signal(true);
+  readonly productosError = signal<string | null>(null);
 
   readonly form = this.fb.nonNullable.group({
-    producto: [this.productos[0], Validators.required],
+    producto: ['', Validators.required],
     inventario_lb: [22046, [Validators.required, Validators.min(1)]],
     cosecha_lb: [11023, [Validators.required, Validators.min(0)]],
     demanda_lb: [15000, [Validators.required, Validators.min(0)]],
@@ -47,6 +52,10 @@ export class InventarioComponent {
   readonly cargando = signal(false);
   readonly error = signal<string | null>(null);
   readonly resultado = signal<InventoryResponse | null>(null);
+
+  constructor() {
+    this.cargarProductos();
+  }
 
   evaluar(): void {
     if (this.form.invalid) {
@@ -58,7 +67,7 @@ export class InventarioComponent {
       this.form.getRawValue();
 
     const payload: InventoryRequest = {
-      producto,
+      producto: producto ?? this.productos[0],
       inventario_actual_kg: this.lbToKg(inventario_lb),
       cosecha_esperada_kg: this.lbToKg(cosecha_lb),
       demanda_predicha_kg: this.lbToKg(demanda_lb),
@@ -85,7 +94,7 @@ export class InventarioComponent {
     if (!res) {
       return 0;
     }
-    const objetivo = res.demanda_predicha_kg;
+    const objetivo = res.demanda_predicha_kg + res.stock_seguridad_kg;
     if (!objetivo) {
       return 0;
     }
@@ -93,10 +102,31 @@ export class InventarioComponent {
     return Math.max(0, Math.min(200, Math.round(ratio)));
   }
 
+  get productos(): string[] {
+    const catalogo = this.productosCatalogo();
+    return catalogo.length ? catalogo.map((item) => item.producto) : ['Tomate', 'Papa', 'Zanahoria'];
+  }
+
   private lbToKg(lb: number | null | undefined): number {
     if (!lb) {
       return 0;
     }
     return Math.round(lb * 0.453592 * 100) / 100;
+  }
+
+  private cargarProductos(): void {
+    this.agentsService.getProductos().subscribe({
+      next: (items) => {
+        this.productosCatalogo.set(items);
+        this.productosLoading.set(false);
+        const producto = items[0]?.producto ?? this.productos[0];
+        this.form.patchValue({ producto });
+      },
+      error: () => {
+        this.productosError.set('No se pudo cargar el catálogo de productos. Usa los predeterminados.');
+        this.productosLoading.set(false);
+        this.form.patchValue({ producto: this.productos[0] });
+      },
+    });
   }
 }

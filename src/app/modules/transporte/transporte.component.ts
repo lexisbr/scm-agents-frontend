@@ -12,6 +12,8 @@ import {
   TransportPlanRequest,
   TransportPlanResponse,
 } from '../../interfaces/transporte.interface';
+import { AgentsService } from '../../services/agents.service';
+import { ProductoCatalogoItem } from '../../interfaces/producto.interface';
 
 @Component({
   selector: 'app-transporte',
@@ -33,8 +35,12 @@ import {
 export class TransporteComponent {
   private readonly fb = inject(FormBuilder);
   private readonly transportService = inject(TransportAgentService);
+  private readonly agentsService = inject(AgentsService);
 
-  readonly productos = ['Tomate', 'Papa', 'Zanahoria', 'Cebolla', 'Brócoli'];
+  readonly productosCatalogo = signal<ProductoCatalogoItem[]>([]);
+  readonly productosLoading = signal(true);
+  readonly productosError = signal<string | null>(null);
+
   readonly origenes = [
     'Quetzaltenango',
     'Salcajá',
@@ -49,7 +55,7 @@ export class TransporteComponent {
   ];
 
   readonly form = this.fb.group({
-    producto: [this.productos[0], Validators.required],
+    producto: ['', Validators.required],
     cantidad_lb: [11023, [Validators.required, Validators.min(1)]],
     origen: [this.origenes[0], Validators.required],
     destino: [this.destinos[0], Validators.required],
@@ -59,6 +65,10 @@ export class TransporteComponent {
   readonly error = signal<string | null>(null);
   readonly planResult = signal<TransportPlanResponse | null>(null);
 
+  constructor() {
+    this.cargarProductos();
+  }
+
   planificar(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -67,7 +77,7 @@ export class TransporteComponent {
 
     const { producto, cantidad_lb, origen, destino } = this.form.getRawValue();
     const payload: TransportPlanRequest = {
-      producto: producto ?? '',
+      producto: producto ?? this.productos[0],
       cantidad_kg: this.lbToKg(cantidad_lb ?? 0),
       origen: origen ?? '',
       destino: destino ?? '',
@@ -103,5 +113,26 @@ export class TransporteComponent {
 
   private lbToKg(lb: number): number {
     return Math.round((lb / 2.20462) * 100) / 100;
+  }
+
+  get productos(): string[] {
+    const catalogo = this.productosCatalogo();
+    return catalogo.length ? catalogo.map((item) => item.producto) : ['Tomate', 'Papa', 'Zanahoria'];
+  }
+
+  private cargarProductos(): void {
+    this.agentsService.getProductos().subscribe({
+      next: (items) => {
+        this.productosCatalogo.set(items);
+        this.productosLoading.set(false);
+        const producto = items[0]?.producto ?? this.productos[0];
+        this.form.patchValue({ producto });
+      },
+      error: () => {
+        this.productosError.set('No se pudo cargar la lista de productos. Usa los predeterminados.');
+        this.productosLoading.set(false);
+        this.form.patchValue({ producto: this.productos[0] });
+      },
+    });
   }
 }
